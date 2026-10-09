@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="kn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ಪೂರಕ ಪೌಷ್ಠಿಕ ಆಹಾರ ತಿಂಗಳುವಾರು ವಿತರಣಾ ವಹಿ</title>
+  <style>
+    :root {
+      --primary-color: #1a237e;
+      --secondary-color: #0d47a1;
+      --bg-color: #f5f7fa;
+      --card-bg: #ffffff;
+      --border-color: #ccc;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 15px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3 {
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: bold;
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: #444;
+    }
+
+    .form-group input, .form-group select {
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 9px 18px;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-add { background-color: #2e7d32; color: white; }
+    .btn-print { background-color: #0288d1; color: white; }
+    .btn-clear { background-color: #d32f2f; color: white; }
+
+    button:hover { opacity: 0.9; }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    th, td {
+      border: 1px solid var(--border-color);
+      padding: 8px;
+    }
+
+    th {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    tfoot tr {
+      background-color: #e8eaf6;
+      font-weight: bold;
+    }
+
+    .flex-tables {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .flex-tables > div {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .total-badge {
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 15px;
+      padding: 10px;
+      background: #e8f5e9;
+      border-radius: 6px;
+      color: #1b5e20;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* Print Setup for A4 Landscape */
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 8mm;
+      }
+
+      body {
+        background: white;
+        padding: 0;
+        font-size: 11px;
+      }
+
+      .no-print, button, .btn-group {
+        display: none !important;
+      }
+
+      .card {
+        box-shadow: none;
+        padding: 0;
+        margin-bottom: 10px;
+      }
+
+      /* Print Register Only Mode */
+      body.print-register .consolidation-section,
+      body.print-register .header-controls {
+        display: none !important;
+      }
+
+      /* Print Consolidation Only Mode */
+      body.print-consolidation .register-section,
+      body.print-consolidation .entry-section,
+      body.print-consolidation .header-controls {
+        display: none !important;
+      }
+
+      table {
+        font-size: 10px;
+      }
+
+      th {
+        background-color: #ddd !important;
+        color: black !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>ಪೂರಕ ಪೌಷ್ಠಿಕ ಆಹಾರ ತಿಂಗಳುವಾರು ವಿತರಣಾ ವಹಿ</h1>
+
+  <!-- Header Section -->
+  <div class="card header-controls no-print">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>ಶಾಲೆಯ ಹೆಸರು:</label>
+        <input type="text" id="schoolName" placeholder="ಶಾಲೆಯ ಹೆಸರು ನಮೂದಿಸಿ" oninput="saveData()">
+      </div>
+      <div class="form-group">
+        <label>ವರ್ಷ:</label>
+        <select id="yearSelect" onchange="saveData()">
+          <option>2025-26</option>
+          <option selected>2026-27</option>
+          <option>2027-28</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>ತಿಂಗಳು:</label>
+        <select id="monthSelect" onchange="saveData()">
+          <option>ಏಪ್ರಿಲ್</option><option>ಮೇ</option><option>ಜೂನ್</option>
+          <option>ಜುಲೈ</option><option>ಆಗಸ್ಟ್</option><option>ಸೆಪ್ಟೆಂಬರ್</option>
+          <option>ಅಕ್ಟೋಬರ್</option><option>ನವೆಂಬರ್</option><option>ಡಿಸೆಂಬರ್</option>
+          <option>ಜನವರಿ</option><option>ಫೆಬ್ರವರಿ</option><option>ಮಾರ್ಚ್</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Entry Form Section -->
+  <div class="card entry-section no-print">
+    <h2>ದೈನಂದಿನ ನಮೂದು</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>ದಿನಾಂಕ:</label>
+        <input type="date" id="entryDate">
+      </div>
+      <div class="form-group">
+        <label>ಒಟ್ಟು ದಾಖಲಾತಿ:</label>
+        <input type="number" id="totalEnrollment" placeholder="ಒಟ್ಟು ದಾಖಲಾತಿ">
+      </div>
+      <div class="form-group">
+        <label>ಅನುದಾನ:</label>
+        <select id="grantType">
+          <option value="STATE">STATE</option>
+          <option value="APF">APF</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>1 ರಿಂದ 5 (ಹಾಜರಾತಿ):</label>
+        <input type="number" id="class1to5" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>6 ರಿಂದ 8 (ಹಾಜರಾತಿ):</label>
+        <input type="number" id="class6to8" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>ಮೊಟ್ಟೆ ಸ್ವೀಕರಿಸಿದವರು:</label>
+        <input type="number" id="eggCount" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>ಬಾಳೆಹಣ್ಣು ಸ್ವೀಕರಿಸಿದವರು:</label>
+        <input type="number" id="bananaCount" placeholder="0">
+      </div>
+    </div>
+    <div class="btn-group">
+      <button class="btn-add" onclick="addEntry()">ಸೇರಿಸಿ (Add Entry)</button>
+    </div>
+  </div>
+
+  <!-- Register Section -->
+  <div class="card register-section">
+    <h2>ದೈನಂದಿನ ವಿತರಣಾ ವಹಿ</h2>
+    <div class="btn-group no-print" style="margin-bottom: 10px;">
+      <button class="btn-print" onclick="printRegister()">Print Register (A4 Landscape)</button>
+    </div>
+    <div class="table-responsive">
+      <table id="registerTable">
+        <thead>
+          <tr>
+            <th>ಕ್ರಮ</th>
+            <th>ದಿನಾಂಕ</th>
+            <th>ಒಟ್ಟು ದಾಖಲಾತಿ</th>
+            <th>1 ರಿಂದ 5</th>
+            <th>6 ರಿಂದ 8</th>
+            <th>ಒಟ್ಟು ಹಾಜರಾತಿ</th>
+            <th>ಅನುದಾನ</th>
+            <th>ಮೊಟ್ಟೆ ಹಣ ₹5</th>
+            <th>ಮೊಟ್ಟೆ ಸಾಗಾಣಿಕೆ ₹0.20</th>
+            <th>ಮೊಟ್ಟೆ ಸುಲಿಯುವ ಕೂಲಿ ₹0.30</th>
+            <th>ಮೊಟ್ಟೆ ಇಂಧನ ₹0.50</th>
+            <th>ಬಾಳೆಹಣ್ಣು ಹಣ ₹5.80</th>
+            <th>ಬಾಳೆಹಣ್ಣು ಸಾಗಾಣಿಕೆ ₹0.20</th>
+            <th>ಒಟ್ಟು ಹಣ</th>
+            <th class="no-print">ಅಳಿಸಿ</th>
+          </tr>
+        </thead>
+        <tbody id="registerBody"></tbody>
+        <tfoot>
+          <tr id="registerFoot">
+            <td colspan="2">ಒಟ್ಟು</td>
+            <td id="totEnroll">0</td>
+            <td id="tot1to5">0</td>
+            <td id="tot6to8">0</td>
+            <td id="totAtt">0</td>
+            <td>-</td>
+            <td id="totEggAmt">₹0.00</td>
+            <td id="totEggTrans">₹0.00</td>
+            <td id="totEggPeel">₹0.00</td>
+            <td id="totEggFuel">₹0.00</td>
+            <td id="totBanAmt">₹0.00</td>
+            <td id="totBanTrans">₹0.00</td>
+            <td id="totGrandAmt">₹0.00</td>
+            <td class="no-print"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- Consolidation Section -->
+  <div class="card consolidation-section">
+    <h2>ಮಾಸಿಕ ಕ್ರೋಢೀಕೃತ ವರದಿ</h2>
+    <div class="btn-group no-print" style="margin-bottom: 10px;">
+      <button class="btn-print" onclick="printConsolidation()">Print Consolidation (A4 Landscape)</button>
+    </div>
+    <div class="flex-tables">
+      <div>
+        <h3>APF ಅನುದಾನ</h3>
+        <table>
+          <tbody id="apfSummaryTable"></tbody>
+        </table>
+      </div>
+      <div>
+        <h3>STATE ಅನುದಾನ</h3>
+        <table>
+          <tbody id="stateSummaryTable"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="total-badge">
+      ಒಟ್ಟು ಮಾಸಿಕ ವೆಚ್ಚ: <span id="overallMonthlyCost">₹0.00</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    Designed by: LAKSHMIKANTH R (Mob :9844444871)
+  </div>
+</div>
+
+<script>
+  let entries = JSON.parse(localStorage.getItem("snf_entries")) || [];
+
+  window.onload = function() {
+    document.getElementById("schoolName").value = localStorage.getItem("snf_school") || "";
+    document.getElementById("yearSelect").value = localStorage.getItem("snf_year") || "2026-27";
+    document.getElementById("monthSelect").value = localStorage.getItem("snf_month") || "ಏಪ್ರಿಲ್";
+    renderTable();
+  };
+
+  function saveData() {
+    localStorage.setItem("snf_school", document.getElementById("schoolName").value);
+    localStorage.setItem("snf_year", document.getElementById("yearSelect").value);
+    localStorage.setItem("snf_month", document.getElementById("monthSelect").value);
+    localStorage.setItem("snf_entries", JSON.stringify(entries));
+  }
+
+  function addEntry() {
+    const date = document.getElementById("entryDate").value;
+    const enroll = parseInt(document.getElementById("totalEnrollment").value) || 0;
+    const grant = document.getElementById("grantType").value;
+    const c1to5 = parseInt(document.getElementById("class1to5").value) || 0;
+    const c6to8 = parseInt(document.getElementById("class6to8").value) || 0;
+    const eggCount = parseInt(document.getElementById("eggCount").value) || 0;
+    const bananaCount = parseInt(document.getElementById("bananaCount").value) || 0;
+
+    if (!date) {
+      alert("ದಯವಿಟ್ಟು ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ.");
+      return;
+    }
+
+    const newEntry = {
+      id: Date.now(),
+      date,
+      enroll,
+      grant,
+      c1to5,
+      c6to8,
+      totAtt: c1to5 + c6to8,
+      eggCount,
+      bananaCount,
+      eggAmt: eggCount * 5.0,
+      eggTrans: eggCount * 0.20,
+      eggPeel: eggCount * 0.30,
+      eggFuel: eggCount * 0.50,
+      banAmt: bananaCount * 5.80,
+      banTrans: bananaCount * 0.20,
+    };
+
+    newEntry.totalCost = newEntry.eggAmt + newEntry.eggTrans + newEntry.eggPeel + newEntry.eggFuel + newEntry.banAmt + newEntry.banTrans;
+
+    entries.push(newEntry);
+    saveData();
+    renderTable();
+
+    // Clear Inputs
+    document.getElementById("entryDate").value = "";
+    document.getElementById("totalEnrollment").value = "";
+    document.getElementById("class1to5").value = "";
+    document.getElementById("class6to8").value = "";
+    document.getElementById("eggCount").value = "";
+    document.getElementById("bananaCount").value = "";
+  }
+
+  function deleteEntry(id) {
+    entries = entries.filter(e => e.id !== id);
+    saveData();
+    renderTable();
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById("registerBody");
+    tbody.innerHTML = "";
+
+    let tEnroll = 0, t1to5 = 0, t6to8 = 0, tAtt = 0;
+    let tEggAmt = 0, tEggTrans = 0, tEggPeel = 0, tEggFuel = 0;
+    let tBanAmt = 0, tBanTrans = 0, tGrandAmt = 0;
+
+    entries.forEach((item, index) => {
+      tEnroll += item.enroll;
+      t1to5 += item.c1to5;
+      t6to8 += item.c6to8;
+      tAtt += item.totAtt;
+      tEggAmt += item.eggAmt;
+      tEggTrans += item.eggTrans;
+      tEggPeel += item.eggPeel;
+      tEggFuel += item.eggFuel;
+      tBanAmt += item.banAmt;
+      tBanTrans += item.banTrans;
+      tGrandAmt += item.totalCost;
+
+      const row = `<tr>
+        <td>${index + 1}</td>
+        <td>${item.date}</td>
+        <td>${item.enroll}</td>
+        <td>${item.c1to5}</td>
+        <td>${item.c6to8}</td>
+        <td>${item.totAtt}</td>
+        <td>${item.grant}</td>
+        <td>₹${item.eggAmt.toFixed(2)}</td>
+        <td>₹${item.eggTrans.toFixed(2)}</td>
+        <td>₹${item.eggPeel.toFixed(2)}</td>
+        <td>₹${item.eggFuel.toFixed(2)}</td>
+        <td>₹${item.banAmt.toFixed(2)}</td>
+        <td>₹${item.banTrans.toFixed(2)}</td>
+        <td>₹${item.totalCost.toFixed(2)}</td>
+        <td class="no-print"><button class="btn-clear" style="padding: 3px 8px;" onclick="deleteEntry(${item.id})">X</button></td>
+      </tr>`;
+      tbody.innerHTML += row;
+    });
+
+    document.getElementById("totEnroll").innerText = tEnroll;
+    document.getElementById("tot1to5").innerText = t1to5;
+    document.getElementById("tot6to8").innerText = t6to8;
+    document.getElementById("totAtt").innerText = tAtt;
+    document.getElementById("totEggAmt").innerText = `₹${tEggAmt.toFixed(2)}`;
+    document.getElementById("totEggTrans").innerText = `₹${tEggTrans.toFixed(2)}`;
+    document.getElementById("totEggPeel").innerText = `₹${tEggPeel.toFixed(2)}`;
+    document.getElementById("totEggFuel").innerText = `₹${tEggFuel.toFixed(2)}`;
+    document.getElementById("totBanAmt").innerText = `₹${tBanAmt.toFixed(2)}`;
+    document.getElementById("totBanTrans").innerText = `₹${tBanTrans.toFixed(2)}`;
+    document.getElementById("totGrandAmt").innerText = `₹${tGrandAmt.toFixed(2)}`;
+
+    renderConsolidation();
+  }
+
+  function renderConsolidation() {
+    const calcGrant = (type) => {
+      const filtered = entries.filter(e => e.grant === type);
+      const days = filtered.length;
+      const eggAtt = filtered.reduce((a, b) => a + b.eggCount, 0);
+      const banAtt = filtered.reduce((a, b) => a + b.bananaCount, 0);
+      const eggAmt = eggAtt * 5.0;
+      const eggTrans = eggAtt * 0.20;
+      const eggPeel = eggAtt * 0.30;
+      const eggFuel = eggAtt * 0.50;
+      const banAmt = banAtt * 5.80;
+      const banTrans = banAtt * 0.20;
+      const total = eggAmt + eggTrans + eggPeel + eggFuel + banAmt + banTrans;
+
+      return { days, eggAtt, banAtt, eggAmt, eggTrans, eggPeel, eggFuel, banAmt, banTrans, total };
+    };
+
+    const apf = calcGrant("APF");
+    const state = calcGrant("STATE");
+
+    const fillSummary = (data) => `
+      <tr><th>ಒಟ್ಟು ದಿನಗಳು</th><td>${data.days}</td></tr>
+      <tr><th>ಮೊಟ್ಟೆ ಒಟ್ಟು ಹಾಜರಾತಿ</th><td>${data.eggAtt}</td></tr>
+      <tr><th>ಬಾಳೆಹಣ್ಣು ಒಟ್ಟು ಹಾಜರಾತಿ</th><td>${data.banAtt}</td></tr>
+      <tr><th>ಮೊಟ್ಟೆಯ ಒಟ್ಟು ಹಣ</th><td>₹${data.eggAmt.toFixed(2)}</td></tr>
+      <tr><th>ಮೊಟ್ಟೆ ಸಾಗಾಣಿಕಾ ವೆಚ್ಚ</th><td>₹${data.eggTrans.toFixed(2)}</td></tr>
+      <tr><th>ಮೊಟ್ಟೆ ಸುಲಿಯುವ ಕೂಲಿ</th><td>₹${data.eggPeel.toFixed(2)}</td></tr>
+      <tr><th>ಮೊಟ್ಟೆ ಇಂಧನ ವೆಚ್ಚ</th><td>₹${data.eggFuel.toFixed(2)}</td></tr>
+      <tr><th>ಬಾಳೆಹಣ್ಣಿನ ಒಟ್ಟು ಹಣ</th><td>₹${data.banAmt.toFixed(2)}</td></tr>
+      <tr><th>ಬಾಳೆಹಣ್ಣು ಸಾಗಾಣಿಕಾ ವೆಚ್ಚ</th><td>₹${data.banTrans.toFixed(2)}</td></tr>
+      <tr><th>ಒಟ್ಟು ವೆಚ್ಚ</th><td><strong>₹${data.total.toFixed(2)}</strong></td></tr>
+    `;
+
+    document.getElementById("apfSummaryTable").innerHTML = fillSummary(apf);
+    document.getElementById("stateSummaryTable").innerHTML = fillSummary(state);
+    document.getElementById("overallMonthlyCost").innerText = `₹${(apf.total + state.total).toFixed(2)}`;
+  }
+
+  function printRegister() {
+    document.body.className = "print-register";
+    window.print();
+    document.body.className = "";
+  }
+
+  function printConsolidation() {
+    document.body.className = "print-consolidation";
+    window.print();
+    document.body.className = "";
+  }
+</script>
+</body>
+</html>
